@@ -1,0 +1,32 @@
+version: "3.1"
+services:
+    db:
+        image: mysql:5.7
+        container_name: mysql1_db
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            # MYSQL_DATABASE: test
+            # MYSQL_USER: user
+            # MYSQL_PASSWORD: test
+            MYSQL_ROOT_PASSWORD: top_secret 
+        ports:
+                - 33061:3306
+        volumes:
+            - ./dump:/docker-entrypoint-initdb.d
+            - ./conf:/etc/mysql/conf.d
+            - persistent:/var/lib/mysql
+        networks:
+            - default
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: mysql1_pma
+        links: 
+            - db:db
+        ports:
+            - 8001:80
+        # environment:
+        #     MYSQL_USER: user
+        #     MYSQL_PASSWORD: test
+        #     MYSQL_ROOT_PASSWORD: test 
+volumes:
+    persistent:
